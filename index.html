@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galería Navideña - Portales de Belén Familiares</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600;700&family=Dancing+Script:wght@700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --christmas-red: #C41E3A;
+            --christmas-green: #1B5E20;
+            --christmas-gold: #FFD700;
+            --christmas-blue: #0d3b66;
+            --christmas-cream: #FFF8F0;
+            --christmas-dark: #0a1a2a;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--christmas-dark);
+            color: var(--christmas-cream);
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(196, 30, 58, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(27, 94, 32, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 50% 50%, rgba(13, 59, 102, 0.1) 0%, transparent 30%);
+            min-height: 100vh;
+        }
+
+        /* Nieve animada */
+        .snowflakes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            background-color: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 2rem 1rem;
+            position: relative;
+            z-index: 10;
+            background: linear-gradient(180deg, rgba(10, 26, 42, 0.95) 0%, rgba(10, 26, 42, 0.7) 100%);
+            backdrop-filter: blur(5px);
+            border-bottom: 3px solid var(--christmas-red);
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, var(--christmas-gold), var(--christmas-cream));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            position: relative;
+            display: inline-block;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 25%;
+            width: 50%;
+            height: 3px;
+            background: linear-gradient(to right, transparent, var(--christmas-red), transparent);
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: var(--christmas-cream);
+            max-width: 800px;
+            margin: 1rem auto;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .nav-icon {
+            font-size: 1.8rem;
+            color: var(--christmas-gold);
+            margin: 0 10px;
+        }
+
+        /* Contador navideño */
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .countdown-item {
+            background: rgba(196, 30, 58, 0.2);
+            border-radius: 10px;
+            padding: 0.8rem 1.2rem;
+            text-align: center;
+            min-width: 80px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s;
+        }
+
+        .countdown-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .countdown-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--christmas-gold);
+            display: block;
+        }
+
+        .countdown-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--christmas-cream);
+        }
+
+        /* Galería Principal */
+        .gallery {
+            max-width: 1400px;
+            margin: 3rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2.5rem;
+            position: relative;
+            z-index: 5;
+        }
+
+        .portal-card {
+            background: linear-gradient(145deg, rgba(13, 59, 102, 0.8), rgba(10, 26, 42, 0.9));
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.4s ease;
+            position: relative;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            opacity: 0;
+            transform: translateY(20px);
+            cursor: pointer;
+        }
+
+        .portal-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .portal-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: var(--christmas-gold);
+        }
+
+        .portal-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, var(--christmas-red), var(--christmas-gold), var(--christmas-green));
+        }
+
+        .portal-img-container {
+            height: 280px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .portal-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s;
+        }
+
+        .portal-card:hover .portal-img {
+            transform: scale(1.1);
+        }
+
+        .portal-info {
+            padding: 1.5rem;
+            position: relative;
+            text-align: center;
+        }
+
+        .family-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--christmas-gold);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .family-location {
+            color: var(--christmas-cream);
+            opacity: 0.8;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .view-more-btn {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.6rem 1.5rem;
+            background: rgba(196, 30, 58, 0.3);
+            color: var(--christmas-cream);
+            border: 2px solid var(--christmas-red);
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .view-more-btn:hover {
+            background: var(--christmas-red);
+            transform: translateY(-3px);
+        }
+
+        /* Modal para galería individual */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 26, 42, 0.95);
+            z-index: 1000;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .modal-content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--christmas-gold);
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--christmas-gold);
+        }
+
+        .close-modal {
+            background: rgba(196, 30, 58, 0.3);
+            color: var(--christmas-cream);
+            border: 2px solid var(--christmas-red);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-modal:hover {
+            background: var(--christmas-red);
+            transform: rotate(90deg);
+        }
+
+        /* Galería individual */
+        .individual-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .gallery-item {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+            cursor: pointer;
+            background: rgba(13, 59, 102, 0.5);
+            border: 2px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+            border-color: var(--christmas-gold);
+        }
+
+        .gallery-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            background: #000;
+        }
+
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(196, 30, 58, 0.8);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .play-btn:hover {
+            background: var(--christmas-red);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        /* Modal de imagen/video completa */
+        .fullscreen-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .fullscreen-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .fullscreen-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+
+        .fullscreen-img {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+
+        .fullscreen-video {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 10px;
+        }
+
+        .fullscreen-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(196, 30, 58, 0.8);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .fullscreen-close:hover {
+            background: var(--christmas-red);
+            transform: rotate(90deg);
+        }
+
+        .fullscreen-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(196, 30, 58, 0.8);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .fullscreen-prev {
+            left: 20px;
+        }
+
+        .fullscreen-next {
+            right: 20px;
+        }
+
+        .fullscreen-nav:hover {
+            background: var(--christmas-red);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 1rem;
+            margin-top: 4rem;
+            background: linear-gradient(0deg, rgba(10, 26, 42, 0.95) 0%, rgba(10, 26, 42, 0.7) 100%);
+            border-top: 3px solid var(--christmas-green);
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: var(--christmas-gold);
+            margin-bottom: 1rem;
+        }
+
+        .footer-subtitle {
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        .copyright {
+            color: rgba(255, 248, 240, 0.6);
+            font-size: 0.9rem;
+            margin-top: 2rem;
+        }
+
+        /* Efectos de luces navideñas */
+        .christmas-light {
+            position: fixed;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            z-index: 2;
+            animation: twinkle 2s infinite alternate;
+            pointer-events: none;
+        }
+
+        @keyframes twinkle {
+            0% {
+                opacity: 0.3;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* Instrucciones para imágenes locales */
+        .instructions {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background: rgba(13, 59, 102, 0.5);
+            border-radius: 15px;
+            border: 2px solid var(--christmas-gold);
+            text-align: center;
+        }
+
+        .instructions h3 {
+            color: var(--christmas-gold);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .instructions ol {
+            text-align: left;
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .instructions li {
+            margin-bottom: 0.5rem;
+            color: var(--christmas-cream);
+        }
+
+        .code-example {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: monospace;
+            text-align: left;
+            margin-top: 1rem;
+            border-left: 4px solid var(--christmas-red);
+        }
+
+        /* Responsive */
+        @media (max-width: 1100px) {
+            .gallery {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                gap: 2rem;
+            }
+
+            .individual-gallery {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .gallery {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 1.5rem;
+            }
+
+            .countdown {
+                gap: 1rem;
+            }
+
+            .countdown-item {
+                min-width: 70px;
+                padding: 0.6rem 1rem;
+            }
+
+            .countdown-value {
+                font-size: 1.7rem;
+            }
+
+            .instructions {
+                margin: 1rem;
+                padding: 1rem;
+            }
+
+            .modal-title {
+                font-size: 2rem;
+            }
+
+            .individual-gallery {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                padding: 1rem;
+                margin: 1rem auto;
+            }
+
+            .modal-title {
+                font-size: 1.5rem;
+            }
+
+            .individual-gallery {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Nieve animada -->
+    <div class="snowflakes" id="snowflakes"></div>
+
+    <!-- Luces navideñas decorativas -->
+    <div class="christmas-lights" id="christmasLights"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <h1>
+                <i class="fas fa-star nav-icon"></i>
+                Portales de Belén Familiares
+                <i class="fas fa-star nav-icon"></i>
+            </h1>
+            <p class="subtitle">La familia Villalobos Rojas, con mucha alegría, desea compartir estos nacimientos elaborados en el seno familiar como un
+            signo de fe, esperanza y del rescate de tan valiosa tradición. Asimismo, buscamos motivar a las futuras generaciones a
+            continuar con este hermoso símbolo. Esta es una colección especial de portales navideños creados por familias para
+            celebrar la magia de la Navidad.</p>
+
+            <!-- Contador navideño -->
+            <div class="countdown">
+                <div class="countdown-item">
+                    <span class="countdown-value" id="days">00</span>
+                    <span class="countdown-label">Días</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-value" id="hours">00</span>
+                    <span class="countdown-label">Horas</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-value" id="minutes">00</span>
+                    <span class="countdown-label">Minutos</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-value" id="seconds">00</span>
+                    <span class="countdown-label">Segundos</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Instrucciones para usar imágenes locales -->
+    <div class="instructions" id="instructions">
+        <h3><i class="fas fa-info-circle"></i> Cómo agregar más imágenes a cada familia</h3>
+        <p>Para agregar más fotos o videos a cada portal familiar:</p>
+        <ol>
+            <li>Añade la propiedad "gallery" a cada objeto en el array portalsData</li>
+            <li>La propiedad "gallery" debe ser un array con las rutas de tus imágenes/videos</li>
+            <li>Para videos, usa objetos con propiedades "type": "video" y "src": "ruta/al/video.mp4"</li>
+        </ol>
+        <div class="code-example">
+            // Ejemplo:<br>
+            {<br>
+            &nbsp;&nbsp;id: 1,<br>
+            &nbsp;&nbsp;family: "Familia Porras Moreno",<br>
+            &nbsp;&nbsp;location: "Tu ubicación",<br>
+            &nbsp;&nbsp;image: "Portales/Porras Moreno.jpeg",<br>
+            &nbsp;&nbsp;gallery: [<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;"Portales/Porras Moreno.jpeg",<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;"Portales/Porras Moreno-2.jpg",<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;{type: "video", src: "videos/familia-porras.mp4"}<br>
+            &nbsp;&nbsp;],<br>
+            &nbsp;&nbsp;year: 2025<br>
+            }
+        </div>
+    </div>
+
+    <!-- Galería Principal -->
+    <main>
+        <div class="gallery" id="gallery">
+            <!-- Los portales se cargarán con JavaScript -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <h2 class="footer-title">¡Feliz Navidad!</h2>
+            <p class="footer-subtitle">Que esta Navidad esté llena de alegría, paz y bendiciones para todas las
+                familias.</p>
+
+            <p class="copyright">© 2025 Galería de Portales Navideños Familiares</p>
+        </div>
+    </footer>
+
+    <!-- Modal para galería individual -->
+    <div class="modal-overlay" id="familyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalFamilyName"></h2>
+                <button class="close-modal" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="individual-gallery" id="individualGallery">
+                <!-- Las imágenes/videos de la galería individual se cargarán aquí -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para imagen/video en pantalla completa -->
+    <div class="fullscreen-modal" id="fullscreenModal">
+        <button class="fullscreen-close" id="closeFullscreen">
+            <i class="fas fa-times"></i>
+        </button>
+        <button class="fullscreen-nav fullscreen-prev" id="prevItem">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="fullscreen-nav fullscreen-next" id="nextItem">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+        <div class="fullscreen-content" id="fullscreenContent">
+            <!-- El contenido en pantalla completa se cargará aquí -->
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // AQUÍ ES DONDE AGREGAS TUS IMÁGENES LOCALES
+        // ============================================
+
+        // Datos de los portales navideños (MODIFICA ESTE ARRAY CON TUS DATOS)
+        const portalsData = [
+            {
+                id: 1,
+                family: "Familia Porras Moreno",
+                location: "Guatuso",
+                image: "Portales/Porras_Moreno.jpeg",
+                gallery: [
+                    "Portales/Porras_Moreno.jpeg",
+                ],
+                year: 2025
+            },
+            {
+                id: 2,
+                family: "Familia Villalobos Rojas",
+                location: "Invu de Peñas Blancas",
+                image: "Portales/Mayda.jpeg",
+                gallery: [
+                    "Portales/Mayda.jpeg", "Portales/Mayda1.jpeg", "Portales/Mayda2.jpeg", "Portales/Mayda3.jpeg", "Portales/Mayda4.jpeg"
+                    // Agrega más imágenes/videos aquí
+                ],
+                year: 2025
+            },
+            {
+                id: 3,
+                family: "Familia Valerio Rojas",
+                location: "Invu de Peñas Blancas",
+                image: "Portales/Valerio_Rojas.jpeg",
+                gallery: [
+                    "Portales/Valerio_Rojas.jpeg",
+                    // Agrega más imágenes/videos aquí
+                ],
+                year: 2025
+            },
+            {
+                id: 4,
+                family: "Familia Jimenez Fallas",
+                location: "Invu de Peñas Blancas",
+                image: "Portales/Jimenez_fallas.jpeg",
+                gallery: [
+                    "Portales/Jimenez_fallas.jpeg",
+                    // Agrega más imágenes/videos aquí
+                ],
+                year: 2025
+            },
+            {
+                id: 5,
+                family: "Familia de Heylin Villalobos",
+                location: "Guapiles",
+                image: "Portales/Heylin _Villalobos.jpeg",
+                gallery: [
+                    "Portales/Heylin _Villalobos.jpeg",
+                    // Agrega más imágenes/videos aquí
+                ],
+                year: 2025
+            },
+                                    {
+                id: 6,
+                family: "Familia de Maria Estela",
+                location: "San Isidro de Peñas Blancas",
+                image: "Portales/Maria_Estela.jpeg",
+                gallery: [
+                    "Portales/Maria_Estela.jpeg",
+                    // Agrega más imágenes/videos aquí
+                ],
+                year: 2025
+            },
+                                                {
+                id: 7,
+                family: "Familia de Viviana Villalobos",
+                location: "San Isidro de Peñas Blancas",
+                image: "Portales/Viviana_Villalobos.jpeg",
+                gallery: [
+                    "Portales/Viviana_Villalobos.jpeg",
+                    // Agrega más imágenes/videos aquí
+                ],
+                year: 2025
+            },
+            {
+                id: 8,
+                family: "Familia de Gisele Villalobos",
+                location: "Ciudad Quesada",
+                image: "Portales/Gisele_Villalobosft.png",
+                gallery: [
+                    "Portales/Gisele_Villalobosft.png",
+                    // Agrega más imágenes/videos aquí
+                    {type: "video", src: "Portales/Gisele_Villalobos.mp4"}
+                ],
+                year: 2025
+            },
+            {
+                id: 9 ,
+                family: "Familia de Heleydi Rojas",
+                location: "El Futuro de La Tigra",
+                image: "Portales/Heleydi_Rojas.jpeg",
+                gallery: [
+                    "Portales/Heleydi_Rojas.jpeg",
+                    // Agrega más imágenes/videos aquí
+                ],
+                year: 2025
+            },
+                        {
+                id: 10,
+                family: "Familia de Emileth Campos",
+                location: "San Isidro de Peñas Blancas",
+                image: "Portales/Emileth_Campos.jpeg",
+                gallery: [
+                    "Portales/Emileth_Campos.jpeg",
+                    // Agrega más imágenes/videos aquí
+                ],
+                year: 2025
+            },
+            {
+                        id: 11,
+                        family: "Familia Campos Jimenez",
+                        location: "Invu de Peñas Blancas",
+                        image: "Portales/Shirley_Jiménezft.png",
+                        gallery: [
+                            "Portales/Shirley_Jiménezft.png",
+                            {type: "video", src: "Portales/Shirley_Jiménez.mp4"}
+                        ],
+                        year: 2025
+            },
+                        {
+                id: 12,
+                family: "Familia de Doris Rojas",
+                location: "Invu de Peñas Blancas",
+                image: "Portales/Doris_Rojasft.jpeg",
+                gallery: [
+                    "Portales/Shirley_Jiménezft.png",
+                    { type: "video", src: "Portales/Doris_Rojas.mp4" }
+                ],
+                year: 2025
+            },
+                                    {
+                id: 13,
+                family: "Familia de Yorleny  Campos",
+                location: "Invu de Peñas Blancas",
+                image: "Portales/Yorleny_Campos.jpeg",
+                gallery: [
+                    "Portales/Yorleny_Campos.jpeg",
+                ],
+                year: 2025
+            },
+            {
+                            id: 14,
+                                    family: "Familia Artavia Porras",
+                                    location: "Manville, Nueva Jersey, EE.UU.",
+                                    image: "Portales/Artavia_Porras.jpeg",
+                                    gallery: [
+                                        "Portales/Artavia_Porras.jpeg",
+                                    ],
+                                    year: 2025
+            },
+                        {
+                id: 15,
+                family: "Familia de María José",
+                location: "Ciudad Quesada",
+                image: "Portales/María_Joséft.png",
+                gallery: [
+                    "Portales/María_Joséft.png",
+                    {type: "video", src: "Portales/María_José.mp4"}
+                ],
+                year: 2025
+            },
+                                    {
+                id: 16,
+                family: "Familia Lopez Jimenez",
+                location: "Santa Clara",
+                image: "Portales/Lj.jpeg",
+                gallery: [
+                    "Portales/Lj.jpeg",
+                    { type: "video", src: "Portales/Lopez_Jimenez.mp4" }
+                ],
+                year: 2025
+            },
+        ];
+
+        // ============================================
+        // NO MODIFIQUES NADA DEBAJO DE ESTA LÍNEA
+        // ============================================
+
+        // Referencias DOM
+        const gallery = document.getElementById('gallery');
+        const countdownDays = document.getElementById('days');
+        const countdownHours = document.getElementById('hours');
+        const countdownMinutes = document.getElementById('minutes');
+        const countdownSeconds = document.getElementById('seconds');
+        const instructions = document.getElementById('instructions');
+
+        // Referencias a modales
+        const familyModal = document.getElementById('familyModal');
+        const modalFamilyName = document.getElementById('modalFamilyName');
+        const individualGallery = document.getElementById('individualGallery');
+        const closeModal = document.getElementById('closeModal');
+        const fullscreenModal = document.getElementById('fullscreenModal');
+        const fullscreenContent = document.getElementById('fullscreenContent');
+        const closeFullscreen = document.getElementById('closeFullscreen');
+        const prevItem = document.getElementById('prevItem');
+        const nextItem = document.getElementById('nextItem');
+
+        // Variables para el control de la galería
+        let currentFamilyGallery = [];
+        let currentFullscreenIndex = 0;
+
+        // Mostrar/ocultar instrucciones según si hay imágenes cargadas
+        function checkImagesLoaded() {
+            const hasValidImages = portalsData.some(portal =>
+                portal.image && portal.image !== "fotos/portal1.jpg" &&
+                portal.image !== "fotos/portal2.jpg"
+            );
+
+            if (hasValidImages) {
+                instructions.style.display = 'none';
+            }
+        }
+
+        // Inicializar efectos visuales
+        function initVisualEffects() {
+            // Crear copos de nieve
+            const snowflakesContainer = document.getElementById('snowflakes');
+            for (let i = 0; i < 80; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.classList.add('snowflake');
+                snowflake.style.left = `${Math.random() * 100}%`;
+                snowflake.style.width = `${Math.random() * 5 + 3}px`;
+                snowflake.style.height = snowflake.style.width;
+                snowflake.style.opacity = Math.random() * 0.7 + 0.3;
+                snowflake.style.animationDuration = `${Math.random() * 10 + 10}s`;
+                snowflake.style.animationDelay = `${Math.random() * 5}s`;
+                snowflakesContainer.appendChild(snowflake);
+            }
+
+            // Crear luces navideñas
+            const lightsContainer = document.getElementById('christmasLights');
+            const colors = ['#C41E3A', '#1B5E20', '#FFD700', '#0d3b66', '#FFFFFF'];
+
+            for (let i = 0; i < 25; i++) {
+                const light = document.createElement('div');
+                light.classList.add('christmas-light');
+                light.style.left = `${Math.random() * 100}%`;
+                light.style.top = `${Math.random() * 100}%`;
+                light.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                light.style.animationDuration = `${Math.random() * 2 + 1}s`;
+                light.style.animationDelay = `${Math.random() * 2}s`;
+                lightsContainer.appendChild(light);
+            }
+        }
+
+        // Renderizar galería principal
+        function renderGallery() {
+            gallery.innerHTML = '';
+
+            if (portalsData.length === 0) {
+                gallery.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 3rem; background: rgba(13, 59, 102, 0.5); border-radius: 20px; border: 2px dashed var(--christmas-gold);">
+                        <i class="fas fa-tree" style="font-size: 3rem; color: var(--christmas-gold); margin-bottom: 1rem;"></i>
+                        <h3 style="color: var(--christmas-cream); margin-bottom: 1rem;">No hay portales cargados</h3>
+                        <p style="color: rgba(255, 248, 240, 0.7);">Agrega tus imágenes en el código JavaScript</p>
+                    </div>
+                `;
+                return;
+            }
+
+            portalsData.forEach((portal, index) => {
+                const portalCard = document.createElement('div');
+                portalCard.className = 'portal-card';
+                portalCard.dataset.id = portal.id;
+
+                // Imagen de respaldo en caso de error al cargar
+                const fallbackImage = `https://images.unsplash.com/photo-1575419780735-7c5f8d2dbc9d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80`;
+
+                portalCard.innerHTML = `
+                    <div class="portal-img-container">
+                        <img src="${portal.image}" 
+                             alt="Portal de la familia ${portal.family}" 
+                             class="portal-img"
+                             onerror="this.src='${fallbackImage}'; this.onerror=null;">
+                    </div>
+                    <div class="portal-info">
+                        <h3 class="family-name">
+                            <i class="fas fa-home"></i> ${portal.family}
+                        </h3>
+                        <p class="family-location">
+                            <i class="fas fa-map-marker-alt"></i> ${portal.location}
+                        </p>
+                        <button class="view-more-btn" data-id="${portal.id}">
+                            <i class="fas fa-images"></i> Ver Galería
+                        </button>
+                    </div>
+                `;
+
+                gallery.appendChild(portalCard);
+
+                // Animación de entrada con retardo
+                setTimeout(() => {
+                    portalCard.classList.add('visible');
+                }, 100 + (index * 100));
+            });
+
+            // Agregar event listeners a los botones
+            document.querySelectorAll('.view-more-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const portalId = parseInt(button.dataset.id);
+                    openFamilyGallery(portalId);
+                });
+            });
+
+            // Agregar event listeners a las tarjetas completas
+            document.querySelectorAll('.portal-card').forEach(card => {
+                card.addEventListener('click', (e) => {
+                    if (!e.target.classList.contains('view-more-btn')) {
+                        const portalId = parseInt(card.dataset.id);
+                        openFamilyGallery(portalId);
+                    }
+                });
+            });
+        }
+
+        // Abrir galería individual de una familia
+        function openFamilyGallery(portalId) {
+            const portal = portalsData.find(p => p.id === portalId);
+            if (!portal) return;
+
+            // Configurar nombre de la familia en el modal
+            modalFamilyName.textContent = portal.family;
+
+            // Limpiar galería individual
+            individualGallery.innerHTML = '';
+
+            // Guardar la galería actual para uso en pantalla completa
+            currentFamilyGallery = portal.gallery || [portal.image];
+
+            // Verificar si hay más de una imagen en la galería
+            if (currentFamilyGallery.length === 0) {
+                individualGallery.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+                        <i class="fas fa-images" style="font-size: 3rem; color: var(--christmas-gold); margin-bottom: 1rem;"></i>
+                        <h3 style="color: var(--christmas-cream);">No hay más imágenes disponibles</h3>
+                        <p style="color: rgba(255, 248, 240, 0.7);">Agrega más imágenes a la galería de esta familia en el código JavaScript.</p>
+                    </div>
+                `;
+            } else {
+                // Renderizar la galería individual
+                currentFamilyGallery.forEach((item, index) => {
+                    const galleryItem = document.createElement('div');
+                    galleryItem.className = 'gallery-item';
+                    galleryItem.dataset.index = index;
+
+                    if (typeof item === 'object' && item.type === 'video') {
+                        // Es un video
+                        galleryItem.innerHTML = `
+                            <div class="video-container">
+                                <video>
+                                    <source src="${item.src}" type="video/mp4">
+                                    Tu navegador no soporta videos HTML5.
+                                </video>
+                                <div class="play-btn">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        // Es una imagen
+                        galleryItem.innerHTML = `
+                            <img src="${item}" 
+                                 alt="Imagen ${index + 1} de ${portal.family}" 
+                                 class="gallery-img"
+                                 onerror="this.src='https://images.unsplash.com/photo-1575419780735-7c5f8d2dbc9d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80'; this.onerror=null;">
+                        `;
+                    }
+
+                    individualGallery.appendChild(galleryItem);
+
+                    // Agregar event listener para abrir en pantalla completa
+                    galleryItem.addEventListener('click', () => {
+                        openFullscreen(index);
+                    });
+                });
+            }
+
+            // Mostrar el modal
+            familyModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Abrir imagen/video en pantalla completa
+        function openFullscreen(index) {
+            currentFullscreenIndex = index;
+            updateFullscreenContent();
+
+            // Mostrar el modal en pantalla completa
+            fullscreenModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Actualizar contenido del modal en pantalla completa
+        function updateFullscreenContent() {
+            const item = currentFamilyGallery[currentFullscreenIndex];
+            fullscreenContent.innerHTML = '';
+
+            if (typeof item === 'object' && item.type === 'video') {
+                // Es un video
+                fullscreenContent.innerHTML = `
+                    <video class="fullscreen-video" controls autoplay>
+                        <source src="${item.src}" type="video/mp4">
+                        Tu navegador no soporta videos HTML5.
+                    </video>
+                `;
+            } else {
+                // Es una imagen
+                const img = document.createElement('img');
+                img.src = item;
+                img.alt = `Imagen ${currentFullscreenIndex + 1}`;
+                img.className = 'fullscreen-img';
+                img.onerror = function () {
+                    this.src = 'https://images.unsplash.com/photo-1575419780735-7c5f8d2dbc9d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80';
+                    this.onerror = null;
+                };
+                fullscreenContent.appendChild(img);
+            }
+
+            // Mostrar u ocultar botones de navegación
+            prevItem.style.display = currentFamilyGallery.length > 1 ? 'flex' : 'none';
+            nextItem.style.display = currentFamilyGallery.length > 1 ? 'flex' : 'none';
+        }
+
+        // Navegar a la imagen/video anterior
+        function prevFullscreenItem() {
+            currentFullscreenIndex = (currentFullscreenIndex - 1 + currentFamilyGallery.length) % currentFamilyGallery.length;
+            updateFullscreenContent();
+        }
+
+        // Navegar a la siguiente imagen/video
+        function nextFullscreenItem() {
+            currentFullscreenIndex = (currentFullscreenIndex + 1) % currentFamilyGallery.length;
+            updateFullscreenContent();
+        }
+
+        // Configurar contador navideño
+        function updateCountdown() {
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            let christmas = new Date(currentYear, 11, 25); // 25 de diciembre
+
+            // Si ya pasó la Navidad de este año, calcular para el próximo año
+            if (now > christmas) {
+                christmas = new Date(currentYear + 1, 11, 25);
+            }
+
+            const diff = christmas - now;
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            countdownDays.textContent = days.toString().padStart(2, '0');
+            countdownHours.textContent = hours.toString().padStart(2, '0');
+            countdownMinutes.textContent = minutes.toString().padStart(2, '0');
+            countdownSeconds.textContent = seconds.toString().padStart(2, '0');
+        }
+
+        // Cerrar modales
+        closeModal.addEventListener('click', () => {
+            familyModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        closeFullscreen.addEventListener('click', () => {
+            fullscreenModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+
+            // Pausar videos si están reproduciéndose
+            const video = fullscreenContent.querySelector('video');
+            if (video) {
+                video.pause();
+            }
+        });
+
+        // Navegación en pantalla completa
+        prevItem.addEventListener('click', prevFullscreenItem);
+        nextItem.addEventListener('click', nextFullscreenItem);
+
+        // Cerrar modales con la tecla Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (fullscreenModal.classList.contains('active')) {
+                    fullscreenModal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                } else if (familyModal.classList.contains('active')) {
+                    familyModal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            }
+
+            // Navegación con flechas en pantalla completa
+            if (fullscreenModal.classList.contains('active')) {
+                if (e.key === 'ArrowLeft') {
+                    prevFullscreenItem();
+                } else if (e.key === 'ArrowRight') {
+                    nextFullscreenItem();
+                }
+            }
+        });
+
+        // Cerrar modal al hacer clic fuera del contenido
+        familyModal.addEventListener('click', (e) => {
+            if (e.target === familyModal) {
+                familyModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        fullscreenModal.addEventListener('click', (e) => {
+            if (e.target === fullscreenModal) {
+                fullscreenModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Inicializar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            initVisualEffects();
+            checkImagesLoaded();
+            renderGallery();
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+
+            // Efecto de parallax en el desplazamiento
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                const snowflakes = document.querySelector('.snowflakes');
+                snowflakes.style.transform = `translateY(${scrolled * 0.5}px)`;
+            });
+        });
+    </script>
+</body>
+
+</html>
